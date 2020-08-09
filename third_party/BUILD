@@ -23,9 +23,9 @@ cc_library(
 		# "//mediapipe:windows": [
         #     "@windows_opencv//:opencv",
         # ],
-        # "//mediapipe:macos": [
-        #     "@macos_opencv//:opencv",
-        # ],
+        "//image_classifier:macos": [
+            "@macos_opencv//:opencv",
+        ],
         "//conditions:default": [
             "@linux_opencv//:opencv",
         ],
