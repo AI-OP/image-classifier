@@ -1,20 +1,22 @@
 #ifndef IMAGE_CLASSIFIER_CC_IMAGE_CLASSIFIER_H_
 #define IMAGE_CLASSIFIER_CC_IMAGE_CLASSIFIER_H_
-#include <cstdio>
+#include "utils.h"
 
 class ImageClassifier {
 public:
     ImageClassifier() = default;
     ~ImageClassifier() = default;
-    bool Init(std::string model_dir) = 0;
-    void SetThreads(int);
-    void SetDevice(Device);
+
+public:
+    virtual bool Init(std::string model_dir) = 0;
+    virtual int GetModelInputSizeX() = 0;
+    virtual int GetModelInputSizeY() = 0;
     virtual std::vector<std::pair<std::string, float>>
         classify(const cv::Mat& image) = 0;
-    
-    int GetModelInputSizeX();
-    int GetModelInputSizeY();
 
+public:
+    virtual void SetThreads(int);
+    virtual void SetDevice(Device);
 };
 
 #endif // IMAGE_CLASSIFIER_CC_IMAGE_CLASSIFIER_H_

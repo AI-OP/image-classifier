@@ -3,6 +3,6 @@ cc_binary(
     srcs = ["main.cc"],
     deps = [
             "@//third_party:opencv",
-            "//image_classifier/cc:image-classifier",
+            "//image_classifier/cc:image_classifier",
     ],
 )

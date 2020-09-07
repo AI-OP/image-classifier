@@ -1,21 +1,21 @@
 #include "image_classify_service.h"
-
+#include "classifier_float_mobilenet.h"
 
 bool ImageClassifyService::Init(std::string model_dir,
         Model method, Device device, int num_threads) {
 
     switch(method) {
-        case kFloatMobileNet:
-            classifier_ = new ClassifierFloatMobileNet();
+        case Model::kFloatMobileNet:
+            classifier_ = absl::make_unique<ClassifierFloatMobileNet>();
             break;
-//        case kQuantizedMobileNet:
-//            classifier_ = new ClassifierQuantizedMobileNet();
+//        case Model::kQuantizedMobileNet:
+//            classifier_ = absl::make_unique<ClassifierQuantizedMobileNet>();
 //            break;
-//        case kFloatEfficientNet:
-//            classifier_ = new ClassifierFloatEfficientNet();
+//        case Model::kFloatEfficientNet:
+//            classifier_ = absl::make_unique<ClassifierFloatEfficientNet>();
 //            break;
-//        case kQuantizedEfficientNet:
-//            classifier_ = new ClassifierQuantizedEfficientNet();
+//        case Model::kQuantizedEfficientNet:
+//            classifier_ = absl::make_unique<ClassifierQuantizedEfficientNet>();
 //            break;
         default:
             ;
@@ -29,7 +29,7 @@ bool ImageClassifyService::Init(std::string model_dir,
 }
 
 void ImageClassifyService::Close() {
-    delete classifier;
+    ;
 }
 
 int ImageClassifyService::GetModelInputSizeX() {
@@ -39,4 +39,10 @@ int ImageClassifyService::GetModelInputSizeX() {
 int ImageClassifyService::GetModelInputSizeY() {
     return classifier_->GetModelInputSizeY();
 }
+
+std::vector<std::pair<std::string, float>> 
+ImageClassifyService::RecognizeImage(Bytes rgb_image_data) {
+    cv::Mat image = cv::imdecode(rgb_image_data, cv::IMREAD_COLOR);
+    return classifier_->classify(image);
+}  
 

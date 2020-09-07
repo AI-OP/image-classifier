@@ -6,14 +6,17 @@
 #include "tensorflow/lite/model.h"
 #include "tensorflow/lite/optional_debug_tools.h"
 
-class ClassifierFloatMobileNet {
+class ClassifierFloatMobileNet: public ImageClassifier {
 public:
     ClassifierFloatMobileNet() = default;
     ~ClassifierFloatMobileNet() = default;
 
-    bool Init(std::string model_dir);
+    bool Init(std::string model_dir) override;
     std::vector<std::pair<std::string, float>>
-        classify(const cv::Mat& image);
+        classify(const cv::Mat& image) override;
+
+    void SetThreads(int threads) override;
+    void SetDevice(Device device) override;
 
     int GetModelInputSizeX() override;
     int GetModelInputSizeY() override;
@@ -24,7 +27,7 @@ private:
     //std::vector<Delegate> delegates_;
     std::vector<std::string> labels_;
     int input_tensor_index_;
-    int ouput_tensor_index_;
+    int output_tensor_index_;
 };
 
 

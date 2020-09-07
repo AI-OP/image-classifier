@@ -3,6 +3,10 @@
 
 #include <cstdio>
 #include <vector>
+#include <string>
+
+#include "opencv2/opencv.hpp"
+#include "absl/memory/memory.h"
 
 #define CHECK(condition, error_info) \
     if(!condition) { \
