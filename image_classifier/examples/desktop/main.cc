@@ -25,6 +25,7 @@ int main(int argc, char** argv) {
 
         std::string image_path = parser.get<std::string>("i"); 
         cv::Mat image = cv::imread(image_path);
+        assert(!image.empty());
         std::vector<uchar> rgb_image_buffer;
         cv::imencode(".bmp", image, rgb_image_buffer);
         std::vector<std::pair<std::string, float>> result = image_classify_service -> RecognizeImage(rgb_image_buffer);
