@@ -9,7 +9,7 @@
 #include "absl/memory/memory.h"
 
 #define CHECK(condition, error_info) \
-    if(!condition) { \
+    if(!(condition)) { \
         std::cout<<error_info<<std::endl;\
         exit(-1); \
     }\
