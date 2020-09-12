@@ -10,7 +10,7 @@
 
 #define CHECK(condition, error_info) \
     if(!(condition)) { \
-        std::cout<<error_info<<std::endl;\
+        printf("%s\n", error_info);\
         exit(-1); \
     }\
 

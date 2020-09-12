@@ -22,6 +22,9 @@ public:
     int GetModelInputSizeY() override;
 
 private:
+    bool LoadLabelsFile(std::string label_file_path);
+
+private:
     std::unique_ptr<tflite::Interpreter> interpreter_;
     std::unique_ptr<tflite::FlatBufferModel> model_;
     //std::vector<Delegate> delegates_;
