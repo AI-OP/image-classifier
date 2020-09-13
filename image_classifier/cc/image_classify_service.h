@@ -12,13 +12,18 @@ enum class Model {
 };
 
 class ImageClassifyService {
+
 public:
     ImageClassifyService() = default;
     ~ImageClassifyService() = default;
+
 public:
 	bool Init(std::string model_dir, Model method, Device device, int num_threads);
-	std::vector<std::pair<std::string, float>> RecognizeImage(Bytes rgb_image_data); //  return the sorted list.
-	void Close();
+
+    //  return the sorted list.
+	std::vector<std::pair<std::string, float>> RecognizeImage(Bytes rgb_image_data); 
+	
+    void Close();
 	int GetModelInputSizeX();
 	int GetModelInputSizeY();
 

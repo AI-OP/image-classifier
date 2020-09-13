@@ -10,6 +10,25 @@ namespace {
         "{i |         | image path}"
         "{m | models  | model folder}";
 }
+ 
+void DrawResult(const std::vector<std::pair<std::string, float>>& result,
+        cv::Mat& debug_image) {
+    // Put text here....
+    
+    std::stringstream display_info;
+    for(int i = 0 ; i < 5; i++) {
+        display_info << "Top"<<i+1<<" is "<< result[i].first 
+            << " with score "<< result[i].second <<std::endl;
+    }
+
+    std::string info = display_info.str().c_str();
+    int font_face = FONT_HERSHEY_SCRIPT_SIMPLEX;
+    double font_scale = 1.2;
+    int thickness = 2.;
+
+    putText(debug_image, info, cv::Point(0,0), font_face, font_scale,  
+            CV_RGB(255,255,0), thickness, cv::LINE_8, false);
+}
 
 int main(int argc, char** argv) {
 
@@ -26,9 +45,12 @@ int main(int argc, char** argv) {
         std::string image_path = parser.get<std::string>("i"); 
         cv::Mat image = cv::imread(image_path);
         CHECK(!image.empty(), "Image cannot be read.");
+
         std::vector<uchar> rgb_image_buffer;
         cv::imencode(".bmp", image, rgb_image_buffer);
-        std::vector<std::pair<std::string, float>> result = image_classify_service -> RecognizeImage(rgb_image_buffer);
+        std::vector<std::pair<std::string, float>> result = 
+            image_classify_service -> RecognizeImage(rgb_image_buffer);
+
         CHECK(!result.empty(), "Results should not be empty!");
         std::cout<<"Top1 is "<< result[0].first << " with score "<< result[0].second <<std::endl;
 
@@ -46,6 +68,12 @@ int main(int argc, char** argv) {
     for(;;) { 
         capture >> frame;
         CHECK(!frame.empty(), "Frame is empty has no data.");
+
+        std::vector<uchar> rgb_image_buffer;
+        cv::imencode(".bmp", frame, rgb_image_buffer);
+        std::vector<std::pair<std::string, float>> result = image_classify_service -> RecognizeImage(rgb_image_buffer);
+
+        DrawResults(result, frame); 
 
         cv::imshow("Debug Image Show", frame);
         char key = cv::waitKey(10);
