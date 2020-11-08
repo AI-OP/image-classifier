@@ -66,6 +66,10 @@ int main(int argc, char** argv) {
         CHECK(!result.empty(), "Results should not be empty!");
         std::cout<<"Top1 is "<< result[0].first << " with score "<< result[0].second <<std::endl;
 
+        DrawResult(result, image); 
+        cv::imshow("Debug Image Show", image);
+        cv::waitKey();
+
         return 0;
     }
 
