@@ -12,14 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef IMAGE_CLASSIFIER_CC_CLASSIFIER_FLOAT_MOBILENET_H_
-#define IMAGE_CLASSIFIER_CC_CLASSIFIER_FLOAT_MOBILENET_H_
-#include "image_classifier.h"
-class ClassifierFloatMobileNet: public ImageClassifier {
-public:
-    ClassifierFloatMobileNet();
-    ~ClassifierFloatMobileNet() = default;
-};
+#include <opencv2/opencv.hpp>
+#include "absl/memory/memory.h"
 
-#endif //IMAGE_CLASSIFIER_CC_CLASSIFIER_FLOAT_MOBILENET_H_
+#include "image_classifier/cc/utils.h"
+#include "image_classifier/cc/image_classifiers.h"
 
+namespace {
+    const std::string command = 
+        "{i |         | image path}"
+        "{m | models  | model folder}";
+}
+
+int main(int argc, char** argv) {
+    ;
+}

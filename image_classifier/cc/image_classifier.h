@@ -16,21 +16,74 @@
 #define IMAGE_CLASSIFIER_CC_IMAGE_CLASSIFIER_H_
 #include "utils.h"
 
+#include "tensorflow/lite/model.h"
+#include "tensorflow/lite/interpreter.h"
+#include "tensorflow/lite/kernels/register.h"
+#include "tensorflow/lite/optional_debug_tools.h"
+
 class ImageClassifier {
 public:
-    ImageClassifier() = default;
-    ~ImageClassifier() = default;
-
-public:
     virtual bool Init(std::string model_dir) = 0;
-    virtual int GetModelInputSizeX() = 0;
-    virtual int GetModelInputSizeY() = 0;
     virtual std::vector<std::pair<std::string, float>>
         classify(const cv::Mat& image) = 0;
 
 public:
-    virtual void SetThreads(int);
-    virtual void SetDevice(Device);
+    virtual int GetThreads();
+    virtual bool SetThreads(const int);
+
+    virtual Device GetDevice();
+    virtual bool SetDevice(const Device);
+
+protected:
+    virtual int GetModelInputSizeX();
+    virtual int GetModelInputSizeY();
+    
+    virtual bool SetModelName(const std::string); 
+    virtual std::string GetModelName(); 
+
+    virtual bool SetLabelName(const std::string);
+    virtual std::string GetLabelName();
+
+    virtual bool SetImageParameters(const float image_mean, 
+            const float image_std);
+    virtual bool GetImageParameters(float& image_mean, 
+            float& image_std);
+
+    virtual bool SetOutputParameters(const float probability_mean,
+            const float probability_std);
+    virtual bool GetOutputParameters(float& probability_mean, 
+            float& probability_std);
+
+public:
+    ImageClassifier();
+    ~ImageClassifier() = default;
+
+protected:
+    int input_tensor_index_;
+    int output_tensor_index_;
+
+private:
+    bool LoadLabelsFile(std::string label_file_path);
+
+private:
+    float image_std_;
+    float image_mean_;
+    float probability_std_;
+    float probability_mean_;
+
+    std::model_name_;
+    std::string label_name_;
+    std::vector<std::string> labels_;
+
+    // TensorFlow Lite Settings
+    Device device_; 
+    int num_threads_;
+
+    // std::vector<Delegate> delegates_;
+    std::unique_ptr<tflite::FlatBufferModel> model_;
+    std::unique_ptr<tflite::Interpreter> interpreter_;
+
+
 };
 
 #endif // IMAGE_CLASSIFIER_CC_IMAGE_CLASSIFIER_H_
