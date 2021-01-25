@@ -36,8 +36,9 @@ public:
 
     //  return the sorted list.
 	std::vector<std::pair<std::string, float>> RecognizeImage(Bytes rgb_image_data); 
-	
     void Close();
+
+public:
 	int GetModelInputSizeX();
 	int GetModelInputSizeY();
 
