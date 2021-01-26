@@ -13,27 +13,12 @@
 // limitations under the License.
 
 #include "image_classify_service.h"
-#include "classifier_float_mobilenet.h"
+#include "image_classifiers.h"
 
 bool ImageClassifyService::Init(std::string model_dir,
         Model method, Device device, int num_threads) {
 
-    switch(method) {
-        case Model::kFloatMobileNet:
-            classifier_ = absl::make_unique<ClassifierFloatMobileNet>();
-            break;
-//        case Model::kQuantizedMobileNet:
-//            classifier_ = absl::make_unique<ClassifierQuantizedMobileNet>();
-//            break;
-//        case Model::kFloatEfficientNet:
-//            classifier_ = absl::make_unique<ClassifierFloatEfficientNet>();
-//            break;
-//        case Model::kQuantizedEfficientNet:
-//            classifier_ = absl::make_unique<ClassifierQuantizedEfficientNet>();
-//            break;
-        default:
-            ;
-    }
+    classifier_ =  ImageClassifiers::CreateImageClassfier(method);
 
     classifier_ -> Init(model_dir);
     classifier_ -> SetThreads(num_threads);

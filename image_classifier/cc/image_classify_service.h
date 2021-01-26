@@ -16,14 +16,7 @@
 #define IMAGE_CLASSIFIER_CC_IMAGE_CLASSIFY_SERVICE_H_
 
 #include "utils.h"
-#include "image_classifier.h"
-
-enum class Model {
-    kFloatMobileNet = 0,
-    kQuantizedMobileNet = 1,
-    kFloatEfficientNet = 2,
-    kQuantizedEfficientNet =3,
-};
+#include "image_classifiers.h"
 
 class ImageClassifyService {
 
