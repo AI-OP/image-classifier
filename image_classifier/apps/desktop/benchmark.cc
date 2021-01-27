@@ -25,5 +25,48 @@ namespace {
 }
 
 int main(int argc, char** argv) {
-    ;
+
+    cv::CommandLineParser parser(argc, argv, command);
+
+    CHECK(parser.has("i"), "Has no image");
+    const std::string kImagePath = parser.get<std::string>("i");
+    cv::Mat image = cv::imread(kImagePath);
+    CHECK(!image.empty(), "Image can not be read.");
+
+    CHECK(parser.has("m"), "Has no model...");
+    const std::string kModelDir = parser.get<std::string>("m");
+    
+    const int kTopN = 5;
+    const int kTestCount = 10;
+
+    for(int model = (int) Model::kFloatMobileNet; 
+        model <= (int) Model::kQuantizedEfficientNet;
+        model ++) {
+        
+        std::unique_ptr<ImageClassifier> image_classifier =
+            ImageClassifiers::CreateImageClassifier((Model)model);
+
+        image_classifier->Init(kModelDir);
+
+        cv::TickMeter tick_meter;
+        std::vector<std::pair<std::string, float>> results;
+        for(int i = 0 ; i < kTestCount; i ++) {
+            tick_meter.start();
+            results = image_classifier -> Classify(image);
+            tick_meter.stop();
+        }
+
+        printf("%s results:\n", image_classifier->GetModelName().c_str());
+        printf("Running time: %lf ms with %lf fps.\n", tick_meter.getAvgTimeMilli(), tick_meter.getFPS());
+
+        CHECK(results.size() >= kTopN, "error in results.size() >= kTopN.");
+
+        for(int i = 0 ; i < kTopN; i ++) {
+            printf("Top-%d is %s with %f \n", i+1, results[i].first.c_str(), results[i].second);
+        }         
+
+    }
+
+    return 0;
 }
+

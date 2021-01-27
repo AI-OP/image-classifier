@@ -24,7 +24,7 @@
 
 #define CHECK(condition, error_info) \
     if(!(condition)) { \
-        printf("%s\n", error_info);\
+        printf("Error: %s\n", error_info);\
         exit(-1); \
     }\
 

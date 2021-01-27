@@ -23,9 +23,9 @@
 
 class ImageClassifier {
 public:
-    virtual bool Init(std::string model_dir) = 0;
+    virtual bool Init(std::string model_dir);
     virtual std::vector<std::pair<std::string, float>>
-        classify(const cv::Mat& image) = 0;
+        Classify(const cv::Mat& image);
 
 public:
     virtual int GetThreads();
@@ -34,15 +34,16 @@ public:
     virtual Device GetDevice();
     virtual bool SetDevice(const Device);
 
-protected:
+public:
     virtual int GetModelInputSizeX();
     virtual int GetModelInputSizeY();
-    
+
+public:
     virtual bool SetModelName(const std::string); 
-    virtual std::string GetModelName(); 
+    virtual std::string GetModelName() const; 
 
     virtual bool SetLabelName(const std::string);
-    virtual std::string GetLabelName();
+    virtual std::string GetLabelName() const;
 
     virtual bool SetImageParameters(const float image_mean, 
             const float image_std);
@@ -56,7 +57,7 @@ protected:
 
 public:
     ImageClassifier();
-    ~ImageClassifier() = default;
+    virtual ~ImageClassifier() = default;
 
 protected:
     int input_tensor_index_;
@@ -71,7 +72,7 @@ private:
     float probability_std_;
     float probability_mean_;
 
-    std::model_name_;
+    std::string model_name_;
     std::string label_name_;
     std::vector<std::string> labels_;
 

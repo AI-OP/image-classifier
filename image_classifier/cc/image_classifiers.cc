@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include "image_classifiers.h"
 #include "classifier_float_mobile_net.h"
 #include "classifier_quantized_mobile_net.h"
 #include "classifier_float_efficient_net.h"
@@ -19,7 +20,7 @@
 
 std::unique_ptr<ImageClassifier> ImageClassifiers::CreateImageClassifier(const Model method) {
 
-    std::unique_ptr<ImageClassifier> classifier;
+    std::unique_ptr<ImageClassifier> classifier = nullptr;
 
     switch(method) {
         case Model::kFloatMobileNet:

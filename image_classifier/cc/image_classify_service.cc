@@ -18,7 +18,7 @@
 bool ImageClassifyService::Init(std::string model_dir,
         Model method, Device device, int num_threads) {
 
-    classifier_ =  ImageClassifiers::CreateImageClassfier(method);
+    classifier_ =  ImageClassifiers::CreateImageClassifier(method);
 
     classifier_ -> Init(model_dir);
     classifier_ -> SetThreads(num_threads);
@@ -42,6 +42,6 @@ int ImageClassifyService::GetModelInputSizeY() {
 std::vector<std::pair<std::string, float>> 
 ImageClassifyService::RecognizeImage(Bytes rgb_image_data) {
     cv::Mat image = cv::imdecode(rgb_image_data, cv::IMREAD_COLOR);
-    return classifier_->classify(image);
+    return classifier_->Classify(image);
 }  
 
