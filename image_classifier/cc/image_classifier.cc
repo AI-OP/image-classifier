@@ -11,13 +11,18 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+#include <stdbool.h>
+#include <stddef.h>
+#include <stdint.h>
 
 #include <string>
 #include <fstream>
 
-#include "classifier_float_mobilenet.h"
+#include "image_classifier.h"
 
-ImageClassifier::ImageClassifier(): device_(kCPU), num_threads_(0)
+ImageClassifier::ImageClassifier(): device_(Device::kCPU), num_threads_(0) {
+    ;
+}
 
 
 bool ImageClassifier::SetThreads(const int threads) {
@@ -49,13 +54,17 @@ bool ImageClassifier::SetModelName(const std::string model_name) {
     return true;
 }
 
-std::string ImageClassifier::GetModelName() {
+std::string ImageClassifier::GetModelName() const {
     return model_name_;
 }
 
-bool ImageClassifier::SetLabelName(cosnt std::string label_name) {
+bool ImageClassifier::SetLabelName(const std::string label_name) {
     label_name_ = label_name;
     return true;
+}
+
+std::string ImageClassifier::GetLabelName() const{
+    return label_name_;
 }
 
 bool ImageClassifier::LoadLabelsFile(std::string label_path) {
@@ -83,7 +92,6 @@ bool ImageClassifier::Init(std::string model_dir) {
 
     // Set model path
     std::string model_path = model_dir + '/' + GetModelName();
-    std::cout<<model_path<<std::endl;
 
     // Load model
     model_ = tflite::FlatBufferModel::BuildFromFile(model_path.c_str());
@@ -112,30 +120,26 @@ int ImageClassifier::GetModelInputSizeY() {
     return interpreter_ -> tensor(input_tensor_index_) -> dims -> data[1];
 }
 
-void ImageClassifier::SetThreads(int threads) {
-    interpreter_->SetNumThreads(threads);
-}
-
-bool SetImageParameters(const float image_mean, const float image_std) {
+bool ImageClassifier::SetImageParameters(const float image_mean, const float image_std) {
     image_mean_ = image_mean;
     image_std_ = image_std;
     return true; 
 }
 
-bool GetImageParameters(float& image_mean, float& image_std) {
+bool ImageClassifier::GetImageParameters(float& image_mean, float& image_std) {
     image_std = image_std_;
     image_mean = image_mean_;
     return true;
 }
 
-bool SetOutputParameters(const float probability_mean,
+bool ImageClassifier::SetOutputParameters(const float probability_mean,
         const float probability_std) {
     probability_mean_ = probability_mean;
     probability_std_ = probability_std;
     return true;
 }
 
-bool GetOutputParameters(float& probability_mean,
+bool ImageClassifier::GetOutputParameters(float& probability_mean,
         float& probability_std) {
     probability_mean = probability_mean_;
     probability_std = probability_std_;
@@ -143,7 +147,7 @@ bool GetOutputParameters(float& probability_mean,
 }
 
 std::vector<std::pair<std::string, float>>
-ImageClassifier::classify(const cv::Mat& image) {
+ImageClassifier::Classify(const cv::Mat& image) {
 
     if(image.empty())
         return {};
@@ -158,21 +162,32 @@ ImageClassifier::classify(const cv::Mat& image) {
     cv::resize(image, input_image, input_size);
     cv::cvtColor(input_image, input_image, cv::COLOR_BGR2RGB);
     
+    TfLiteType image_tf_data_type = interpreter_ -> tensor(input_tensor_index_) -> type;
 
     float kImageMean, kImageStd;
     GetImageParameters(kImageMean, kImageStd);
 
-    input_image.convertTo(input_image, CV_32F, 1. / kImageStd, - kImageMean / kImageStd);
-    float* input_tensor_buffer = interpreter_ -> typed_tensor<float>(input_tensor_index_);
-    int buffer_size = sizeof(float)*kNetworkInputWidth*kNetworkInputHeight*kNetworkInputChannels;
-    memcpy((uchar*)(input_tensor_buffer), input_image.data, buffer_size);
+    CHECK(kTfLiteFloat32 == image_tf_data_type || kTfLiteUInt8 == image_tf_data_type, 
+            " image_tf_data_type is not uint8 or float32.");
+
+    int cv_data_type = kTfLiteFloat32 == image_tf_data_type ? CV_32F : CV_8U;
+
+    input_image.convertTo(input_image, cv_data_type, 1. / kImageStd, - kImageMean / kImageStd);
+
+    void* input_tensor_buffer = interpreter_ -> tensor(input_tensor_index_) -> data.data; 
+
+    size_t bytes_size = kTfLiteFloat32 == image_tf_data_type ? sizeof(float) : sizeof(uint8_t);
+    size_t buffer_size = bytes_size * kNetworkInputWidth*kNetworkInputHeight*kNetworkInputChannels;
+
+    memcpy(input_tensor_buffer, input_image.data, buffer_size);
 
     // Runing inference.
     CHECK(kTfLiteOk == interpreter_->Invoke(), "Inference invoke error.");
 
     // Output shape: {1, NUM_CLASSES}
-    const float* output = interpreter_->typed_tensor<float>(output_tensor_index_);
+    const TfLiteType output_tf_data_type = interpreter_->tensor(output_tensor_index_)->type;
     const int kNumClasses = interpreter_->tensor(output_tensor_index_)->dims->data[1]; 
+    const void* output = interpreter_->tensor(output_tensor_index_)->data.data;
 
     auto compare = 
         [](std::pair<std::string, float> a, std::pair<std::string, float> b){
@@ -187,8 +202,10 @@ ImageClassifier::classify(const cv::Mat& image) {
     GetOutputParameters(kProbabilityMean, kProbabilityStd);
 
     for(int i = 0 ; i < kNumClasses; i ++) {
-       pq.push(std::make_pair(labels_[i],
-               (float) (output[i] - kProbabilityMean) / kProbabilityStd);
+        float output_value = output_tf_data_type == kTfLiteFloat32 ? ((float*)output)[i] : 
+            (float)((uint8_t*)output)[i]; 
+        pq.push(std::make_pair(labels_[i],
+                (float) (output_value - kProbabilityMean) / kProbabilityStd));
     }
 
     std::vector<std::pair<std::string, float>> label_prob;
