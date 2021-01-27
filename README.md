@@ -1,5 +1,10 @@
 # image-classifier
 
+## Framework (WIP)
+
+![](https://github.com/SunAriesCN/image-classifier/blob/master/docs/image_classifier_framework.png)
+
+
 ## Usage
 ```
 $ ./build.sh
