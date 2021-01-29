@@ -24,7 +24,6 @@ cc_binary(
 
 cc_binary(
     name = "image_classifier_benchmark",
-    srcs = ["benchmark.cc"],
     deps = [
         "//image_classifier/apps/desktop:image_classifier_benchmark_cc",
     ],
