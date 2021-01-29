@@ -17,7 +17,7 @@ licenses(["notice"])  # Apache 2.0
 cc_binary(
     name = "image_classifier",
     deps = [
-        "image_classifier_cc",
+        "//image_classifier/apps/desktop:image_classifier_cc",
     ],
     linkstatic=True,
 )
@@ -26,7 +26,7 @@ cc_binary(
     name = "image_classifier_benchmark",
     srcs = ["benchmark.cc"],
     deps = [
-        "image_classifier_benchmark_cc",
+        "//image_classifier/apps/desktop:image_classifier_benchmark_cc",
     ],
     linkstatic=True,
 )
