@@ -1,6 +1,7 @@
 workspace(name = "image_classifier")
 
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
+load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository", "new_git_repository")
 
 skylib_version = "0.9.0"
 http_archive(
@@ -12,6 +13,21 @@ http_archive(
 load("@bazel_skylib//lib:versions.bzl", "versions")
 versions.check(minimum_bazel_version = "2.0.0")
 
+# Configure rules_foreign_cc for OpenCV CMakse used in `third_party/BUILD`
+http_archive(
+    name = "rules_cc",
+    strip_prefix = "rules_cc-master",
+    urls = ["https://github.com/bazelbuild/rules_cc/archive/master.zip"],
+)
+
+http_archive(
+   name = "rules_foreign_cc",
+   strip_prefix = "rules_foreign_cc-master",
+   url = "https://github.com/bazelbuild/rules_foreign_cc/archive/master.zip",
+)
+
+load("@rules_foreign_cc//:workspace_definitions.bzl", "rules_foreign_cc_dependencies")
+rules_foreign_cc_dependencies()
 
 # ABSL cpp library lts_2020_02_25
 http_archive(
@@ -28,6 +44,15 @@ http_archive(
     ],
     strip_prefix = "abseil-cpp-20200225",
     sha256 = "728a813291bdec2aa46eab8356ace9f75ac2ed9dfe2df5ab603c4e6c09f1c353"
+)
+
+# OpenCV
+all_content = """filegroup(name = "all", srcs = glob(["**"]), visibility = ["//visibility:public"])"""
+new_git_repository(
+    name = "opencv",
+    build_file_content = all_content,
+    remote = "https://github.com/opencv/opencv.git",
+    tag = "4.5.0"
 )
 
 new_local_repository(

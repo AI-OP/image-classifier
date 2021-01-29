@@ -18,6 +18,7 @@
 #include <cstdio>
 #include <vector>
 #include <string>
+#include <queue>
 
 #include "opencv2/opencv.hpp"
 #include "absl/memory/memory.h"
