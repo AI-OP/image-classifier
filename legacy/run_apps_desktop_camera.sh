@@ -12,4 +12,4 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-./bazel-bin/image_classifier/apps/desktop/image_classifier.exe -c=0 -m=models
+./bazel-bin/image_classifier/apps/desktop/image_classifier -c=0 -m=models

@@ -1,4 +1,4 @@
-# Copyright 2020 Sun Aries.
+# Copyright 2021 Sun Aries.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,4 +12,5 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-./bazel-bin/image_classifier/apps/desktop/image_classifier.exe -i=data/goldfish-alcohol.jpg -m=models
+bazel run -c opt --experimental_repo_remote_exec //image_classifier/apps/desktop:image_classifier -- -i=data/goldfish-alcohol.jpg -m=models  --verbose_failures ;
+bazel run -c opt --experimental_repo_remote_exec //image_classifier/apps/desktop:image_classifier -- -c=0 -m=models
