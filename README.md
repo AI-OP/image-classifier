@@ -7,15 +7,17 @@
 
 ## Usage
 ```
-$ ./build.sh
-$ ./run_apps_desktop_camera.sh
-$ ./run_apps_desktop_image.sh
+$ ./bazel_run_benchmark.sh
+$ ./bazel_run_desktop_image.sh
+$ ./build_rpi.sh
 ```
 
 ## TODO
 1. Please write the README.md seriously ok....o(-.-)o  
-  [a] Well, framework graph is out, it seem better.
+  [a] Well, framework graph is out, it seem better now.
 2. Android app waiting for you, Sun, come on!
 3. Anyone can write the IOS app for this repo, Sun is not well on IOS development.
-4. Raspberry Pi compilation files seem not be found on this repo. Sun!!! DO IT QUICKLY!!! OK? (T.T)  
-  [a] You can check this [repo](https://github.com/Duan-JM/bazel-crosstools-compiler) temporarily, Sun is working on it.
+4. [Completed]Raspberry Pi compilation files seem not be found on this repo. Sun!!! DO IT QUICKLY!!! OK? (T.T)  
+  [a] Usage has showed the all.  
+  [b] You can also go to my friend's [repo](https://github.com/Duan-JM/bazel-crosstools-compiler) for more details.
+   
