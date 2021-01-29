@@ -19,6 +19,7 @@ cc_binary(
     deps = [
         "image_classifier_cc",
     ],
+    visibility = ["//visibility:public"],
 )
 
 cc_binary(
@@ -26,6 +27,7 @@ cc_binary(
     deps = [
         "image_classifier_benchmark_cc",
     ],
+    visibility = ["//visibility:public"],
 )
 
 cc_library(
@@ -35,6 +37,7 @@ cc_library(
         "@//third_party:opencv",
         "//image_classifier/cc:image_classifier",
     ],
+    visibility = ["//visibility:public"],
 )
 
 cc_library(
@@ -44,4 +47,5 @@ cc_library(
         "@//third_party:opencv",
         "//image_classifier/cc:image_classifier"
     ],
+    visibility = ["//visibility:public"],
 )
