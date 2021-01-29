@@ -12,5 +12,5 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-bazel run -c opt --experimental_repo_remote_exec //image_classifier/apps/desktop:image_classifier -- -i=data/goldfish-alcohol.jpg -m=models  --verbose_failures ;
-bazel run -c opt --experimental_repo_remote_exec //image_classifier/apps/desktop:image_classifier -- -c=0 -m=models
+bazel run -c opt --experimental_repo_remote_exec //image_classifier/apps/desktop:image_classifier -- -i=$PWD/data/goldfish-alcohol.jpg -m=$PWD/models ;
+bazel run -c opt --experimental_repo_remote_exec //image_classifier/apps/desktop:image_classifier -- -c=0 -m=$PWD/models

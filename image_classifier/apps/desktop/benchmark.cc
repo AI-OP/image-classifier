@@ -31,7 +31,10 @@ int main(int argc, char** argv) {
     CHECK(parser.has("i"), "Has no image");
     const std::string kImagePath = parser.get<std::string>("i");
     cv::Mat image = cv::imread(kImagePath);
-    CHECK(!image.empty(), "Image can not be read.");
+    if(image.empty()) {
+        printf("Error: Image %s can not be read.\n", kImagePath.c_str());
+        return -1;
+    }
 
     CHECK(parser.has("m"), "Has no model...");
     const std::string kModelDir = parser.get<std::string>("m");

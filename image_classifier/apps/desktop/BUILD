@@ -16,18 +16,32 @@ licenses(["notice"])  # Apache 2.0
 
 cc_binary(
     name = "image_classifier",
-    srcs = ["main.cc"],
     deps = [
-            "@//third_party:opencv",
-            "//image_classifier/cc:image_classifier",
+        "image_classifier_cc",
     ],
 )
 
 cc_binary(
     name = "image_classifier_benchmark",
+    deps = [
+        "image_classifier_benchmark_cc",
+    ],
+)
+
+cc_library(
+    name = "image_classifier_cc",
+    srcs = ["main.cc"],
+    deps = [
+        "@//third_party:opencv",
+        "//image_classifier/cc:image_classifier",
+    ],
+)
+
+cc_library(
+    name = "image_classifier_benchmark_cc",
     srcs = ["benchmark.cc"],
     deps = [
-            "@//third_party:opencv",
-            "//image_classifier/cc:image_classifier"
+        "@//third_party:opencv",
+        "//image_classifier/cc:image_classifier"
     ],
 )
