@@ -19,6 +19,7 @@ cc_binary(
     deps = [
         "//image_classifier/apps/desktop:image_classifier_cc",
     ],
+    visibility = ["//visibility:public"],
     linkstatic=True,
 )
 
@@ -27,6 +28,7 @@ cc_binary(
     deps = [
         "//image_classifier/apps/desktop:image_classifier_benchmark_cc",
     ],
+    visibility = ["//visibility:public"],
     linkstatic=True,
 )
 
