@@ -11,5 +11,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+
 bazel run -c opt --experimental_repo_remote_exec //image_classifier/apps/desktop:image_classifier_benchmark  -- -i=$PWD/data/goldfish-alcohol.jpg -m=$PWD/models
 

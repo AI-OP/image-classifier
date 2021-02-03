@@ -11,4 +11,5 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+
 bazel build --config elinux_armhf --define OPENCV=source --experimental_repo_remote_exec //image_classifier/apps/raspberry_pi:image_classifier_benchmark 
