@@ -16,7 +16,7 @@ $ cd build
 $ cmake -D CMAKE_BUILD_TYPE=Release -D CMAKE_INSTALL_PREFIX=/path/to/opencv/install .. 
 $ make install 
 ```
-Otherwise, you can also get it from apt on Linux or homebrew from MacOS.
+Otherwise, you can also get it from apt on Linux or homebrew on MacOSX.
 
 Then run the applications on this repo.
 ```
