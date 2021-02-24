@@ -6,7 +6,7 @@ licenses(["notice"])  # BSD license
 exports_files(["LICENSE"])
 
 # The following build rule assumes that OpenCV is installed by
-# `$ git clonegit clone https://github.com/Itseez/opencv.git `
+# `$ git clone https://github.com/Itseez/opencv.git `
 # `$ cd opencv/ `
 # `$ mkdir build install `
 # `$ cd build `
