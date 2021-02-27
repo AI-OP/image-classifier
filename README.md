@@ -11,9 +11,10 @@ Your can build it from sources by following instructions.
 ```
 $ git clone https://github.com/Itseez/opencv.git 
 $ cd opencv/ 
-$ mkdir build install
+$ mkdir build
 $ cd build 
 $ cmake -D CMAKE_BUILD_TYPE=Release -D CMAKE_INSTALL_PREFIX=/path/to/opencv/install .. 
+$ make -j2
 $ make install 
 ```
 Otherwise, you can also get it from apt on Linux or homebrew on MacOSX.
