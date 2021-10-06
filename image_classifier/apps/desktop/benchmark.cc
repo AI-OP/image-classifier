@@ -25,6 +25,21 @@ const std::string command =
 }
 
 int main(int argc, char** argv) {
+  std::vector<Model> model_names = {
+      Model::kFloatMobileNet,
+      Model::kQuantizedMobileNet,
+      Model::kFloatEfficientNet,
+      Model::kQuantizedEfficientNet,
+  };
+
+#ifdef WITH_EDGE_TPU
+  const std::vector<Model> kEdgeTPUModels = {
+      Model::kQuantizedMobileNetEdgeTPU,
+      Model::kQuantizedEfficientNetEdgeTPU,
+  };
+  model_names = kEdgeTPUModels;
+#endif  // WITH_EDGE_TPU
+
   cv::CommandLineParser parser(argc, argv, command);
 
   CHECK(parser.has("i"), "Has no image");
@@ -41,10 +56,9 @@ int main(int argc, char** argv) {
   const int kTopN = 5;
   const int kTestCount = 10;
 
-  for (int model = (int)Model::kFloatMobileNet;
-       model <= (int)Model::kQuantizedEfficientNet; model++) {
+  for (auto& model : model_names) {
     std::unique_ptr<ImageClassifier> image_classifier =
-        ImageClassifiers::CreateImageClassifier((Model)model);
+        ImageClassifiers::CreateImageClassifier(model);
 
     image_classifier->Init(kModelDir);
 
