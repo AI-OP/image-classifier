@@ -11,7 +11,6 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-#include "image_classifier.h"
 
 #include <stdbool.h>
 #include <stddef.h>
@@ -19,6 +18,12 @@
 
 #include <fstream>
 #include <string>
+
+#include "image_classifier.h"
+
+#ifdef WITH_EDGE_TPU
+#include "tflite/public/edgetpu.h"
+#endif // WITH_EDGE_TPU
 
 ImageClassifier::ImageClassifier() : device_(Device::kCPU), num_threads_(0) {
   ;
@@ -75,6 +80,8 @@ bool ImageClassifier::LoadLabelsFile(std::string label_path) {
   return !labels_.empty();
 }
 
+
+#ifdef WITH_EDGE_TPU
 // TODO: It should be deprecated by using libcoral.
 std::unique_ptr<tflite::Interpreter> BuildEdgeTpuInterpreter(
     const tflite::FlatBufferModel& model,
@@ -93,6 +100,8 @@ std::unique_ptr<tflite::Interpreter> BuildEdgeTpuInterpreter(
   }
   return interpreter;
 }
+#endif // WITH_EDGE_TPU
+
 
 bool ImageClassifier::Init(std::string model_dir) {
   // Load labels file
@@ -108,17 +117,20 @@ bool ImageClassifier::Init(std::string model_dir) {
   CHECK(model_ != nullptr, "Model cannot be built.");
 
   // Build the interpreter
+  tflite::ops::builtin::BuiltinOpResolver resolver;
+  tflite::InterpreterBuilder builder(*model_, resolver);
+  builder(&interpreter_);
+  CHECK(this->interpreter_ != nullptr, "Interpreter is null.");
+
+#ifdef WITH_EDGE_TPU
   if (GetDevice() == Device::kEdgeTPU) {
     std::shared_ptr<edgetpu::EdgeTpuContext> edgetpu_context =
         edgetpu::EdgeTpuManager::GetSingleton()->OpenDevice();
-    std::unique_ptr<tflite::Interpreter> interpreter =
-        BuildEdgeTpuInterpreter(*model, edgetpu_context.get());
-  } else {
-    tflite::ops::builtin::BuiltinOpResolver resolver;
-    tflite::InterpreterBuilder builder(*model_, resolver);
-    builder(&interpreter_);
+    interpreter_ = nullptr;
+    interpreter_ = BuildEdgeTpuInterpreter(*model, edgetpu_context.get());
+    CHECK(this->interpreter_ != nullptr, "Edge TPU Interpreter is null.");
   }
-  CHECK(this->interpreter_ != nullptr, "Interpreter is null.");
+#endif // WITH_EDGE_TPU
 
   input_tensor_index_ = interpreter_->inputs()[0];
   output_tensor_index_ = interpreter_->outputs()[0];

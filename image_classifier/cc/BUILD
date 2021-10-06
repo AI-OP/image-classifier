@@ -25,7 +25,7 @@ cc_library(
   ],
   hdrs = [
     "utils.h",
-    "image_classfier.h",
+    "image_classifier.h",
     "image_classifiers.h",
     "image_classify_service.h",
     "classifier_float_mobile_net.h",
@@ -57,7 +57,7 @@ cc_library(
 
    hdrs = [
      "utils.h",
-     "image_classfier.h",
+     "image_classifier.h",
      "image_classifiers.h",
      "image_classify_service.h",
      "classifier_quantized_mobile_net.h",
@@ -67,6 +67,7 @@ cc_library(
    ],
 
    copts = ["-DWITH_EDGE_TPU"],
+   visibility = ["//visibility:public"],
 
    deps = [
      "@libedgetpu//tflite/public:oss_edgetpu_direct_all",
