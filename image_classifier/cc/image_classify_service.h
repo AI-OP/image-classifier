@@ -15,30 +15,29 @@
 #ifndef IMAGE_CLASSIFIER_CC_IMAGE_CLASSIFY_SERVICE_H_
 #define IMAGE_CLASSIFIER_CC_IMAGE_CLASSIFY_SERVICE_H_
 
-#include "utils.h"
 #include "image_classifiers.h"
+#include "utils.h"
 
 class ImageClassifyService {
+ public:
+  ImageClassifyService() = default;
+  ~ImageClassifyService() = default;
 
-public:
-    ImageClassifyService() = default;
-    ~ImageClassifyService() = default;
+ public:
+  bool Init(std::string model_dir, Model method, Device device,
+            int num_threads);
 
-public:
-	bool Init(std::string model_dir, Model method, Device device, int num_threads);
+  //  return the sorted list.
+  std::vector<std::pair<std::string, float>> RecognizeImage(
+      Bytes rgb_image_data);
+  void Close();
 
-    //  return the sorted list.
-	std::vector<std::pair<std::string, float>> RecognizeImage(Bytes rgb_image_data); 
-    void Close();
+ public:
+  int GetModelInputSizeX();
+  int GetModelInputSizeY();
 
-public:
-	int GetModelInputSizeX();
-	int GetModelInputSizeY();
-
-private:
-    std::unique_ptr<ImageClassifier> classifier_;
+ private:
+  std::unique_ptr<ImageClassifier> classifier_;
 };
 
-#endif //IMAGE_CLASSIFIER_CC_IMAGE_CLASSIFY_SERVICE_H_
-
- 
+#endif  // IMAGE_CLASSIFIER_CC_IMAGE_CLASSIFY_SERVICE_H_

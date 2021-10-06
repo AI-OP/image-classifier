@@ -49,3 +49,15 @@ cc_library(
     ],
     visibility = ["//visibility:public"],
 )
+
+cc_library(
+    name = "benchmark_edgetpu_cc",
+    srcs = ["benchmark.cc"],
+    copts = ["-DWITH_EDGE_TPU=1"],
+    deps = [
+        "@//third_party:opencv",
+        "//image_classifier/cc:image_classifier_edgetpu"
+    ],
+    visibility = ["//visibility:public"],
+)
+

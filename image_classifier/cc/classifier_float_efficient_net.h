@@ -17,11 +17,9 @@
 
 #include "image_classifier.h"
 class ClassifierFloatEfficientNet : public ImageClassifier {
-public:
-    ClassifierFloatEfficientNet();
-    ~ClassifierFloatEfficientNet() = default;
+ public:
+  ClassifierFloatEfficientNet();
+  ~ClassifierFloatEfficientNet() = default;
 };
 
-#endif // CLASSIFIER_FLOAT_EFFICIENT_NET_H_
-
-
+#endif  // CLASSIFIER_FLOAT_EFFICIENT_NET_H_

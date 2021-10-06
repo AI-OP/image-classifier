@@ -18,21 +18,23 @@
 #include "image_classifier.h"
 
 enum class Model {
-    kFloatMobileNet = 0,
-    kQuantizedMobileNet,
-    kFloatEfficientNet,
-    kQuantizedEfficientNet,
+  kFloatMobileNet = 0,
+  kQuantizedMobileNet,
+  kFloatEfficientNet,
+  kQuantizedEfficientNet,
+#ifdef WITH_EDGE_TPU
+  kQuantizedMobileNetEdgeTPU,
+  kQuantizedEfficientNetEdgeTPU,
+#endif  // WITH_EDGE_TPU
 };
 
 class ImageClassifiers {
+ public:
+  static std::unique_ptr<ImageClassifier> CreateImageClassifier(const Model);
 
-public:
-    static std::unique_ptr<ImageClassifier> CreateImageClassifier(const Model);
-
-public:
-    ImageClassifiers()=default;
-    ~ImageClassifiers()=default;
-
+ public:
+  ImageClassifiers() = default;
+  ~ImageClassifiers() = default;
 };
 
-#endif // IMAGE_CLASSIFIER_CC_IMAGE_CLASSIFIERS_H_
+#endif  // IMAGE_CLASSIFIER_CC_IMAGE_CLASSIFIERS_H_

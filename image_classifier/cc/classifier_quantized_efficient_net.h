@@ -17,11 +17,9 @@
 
 #include "image_classifier.h"
 class ClassifierQuantizedEfficientNet : public ImageClassifier {
-public:
-    ClassifierQuantizedEfficientNet();
-    ~ClassifierQuantizedEfficientNet() = default;
+ public:
+  ClassifierQuantizedEfficientNet();
+  ~ClassifierQuantizedEfficientNet() = default;
 };
 
-#endif // CLASSIFIER_QUANTIZED_EFFICIENT_NET_H_
-
-
+#endif  // CLASSIFIER_QUANTIZED_EFFICIENT_NET_H_

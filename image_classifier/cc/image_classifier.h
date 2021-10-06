@@ -14,78 +14,73 @@
 
 #ifndef IMAGE_CLASSIFIER_CC_IMAGE_CLASSIFIER_H_
 #define IMAGE_CLASSIFIER_CC_IMAGE_CLASSIFIER_H_
-#include "utils.h"
-
-#include "tensorflow/lite/model.h"
 #include "tensorflow/lite/interpreter.h"
 #include "tensorflow/lite/kernels/register.h"
+#include "tensorflow/lite/model.h"
 #include "tensorflow/lite/optional_debug_tools.h"
+#include "utils.h"
 
 class ImageClassifier {
-public:
-    virtual bool Init(std::string model_dir);
-    virtual std::vector<std::pair<std::string, float>>
-        Classify(const cv::Mat& image);
+ public:
+  virtual bool Init(std::string model_dir);
+  virtual std::vector<std::pair<std::string, float>> Classify(
+      const cv::Mat& image);
 
-public:
-    virtual int GetThreads();
-    virtual bool SetThreads(const int);
+ public:
+  virtual int GetThreads();
+  virtual bool SetThreads(const int);
 
-    virtual Device GetDevice();
-    virtual bool SetDevice(const Device);
+  virtual Device GetDevice();
+  virtual bool SetDevice(const Device);
 
-public:
-    virtual int GetModelInputSizeX();
-    virtual int GetModelInputSizeY();
+ public:
+  virtual int GetModelInputSizeX();
+  virtual int GetModelInputSizeY();
 
-public:
-    virtual bool SetModelName(const std::string); 
-    virtual std::string GetModelName() const; 
+ public:
+  virtual bool SetModelName(const std::string);
+  virtual std::string GetModelName() const;
 
-    virtual bool SetLabelName(const std::string);
-    virtual std::string GetLabelName() const;
+  virtual bool SetLabelName(const std::string);
+  virtual std::string GetLabelName() const;
 
-    virtual bool SetImageParameters(const float image_mean, 
-            const float image_std);
-    virtual bool GetImageParameters(float& image_mean, 
-            float& image_std);
+  virtual bool SetImageParameters(const float image_mean,
+                                  const float image_std);
+  virtual bool GetImageParameters(float& image_mean, float& image_std);
 
-    virtual bool SetOutputParameters(const float probability_mean,
-            const float probability_std);
-    virtual bool GetOutputParameters(float& probability_mean, 
-            float& probability_std);
+  virtual bool SetOutputParameters(const float probability_mean,
+                                   const float probability_std);
+  virtual bool GetOutputParameters(float& probability_mean,
+                                   float& probability_std);
 
-public:
-    ImageClassifier();
-    virtual ~ImageClassifier() = default;
+ public:
+  ImageClassifier();
+  virtual ~ImageClassifier() = default;
 
-protected:
-    int input_tensor_index_;
-    int output_tensor_index_;
+ protected:
+  int input_tensor_index_;
+  int output_tensor_index_;
 
-private:
-    bool LoadLabelsFile(std::string label_file_path);
+ private:
+  bool LoadLabelsFile(std::string label_file_path);
 
-private:
-    float image_std_;
-    float image_mean_;
-    float probability_std_;
-    float probability_mean_;
+ private:
+  float image_std_;
+  float image_mean_;
+  float probability_std_;
+  float probability_mean_;
 
-    std::string model_name_;
-    std::string label_name_;
-    std::vector<std::string> labels_;
+  std::string model_name_;
+  std::string label_name_;
+  std::vector<std::string> labels_;
 
-    // TensorFlow Lite Settings
-    Device device_; 
-    int num_threads_;
+  // TensorFlow Lite Settings
+  Device device_;
+  int num_threads_;
 
-    // std::vector<Delegate> delegates_;
-    std::unique_ptr<tflite::FlatBufferModel> model_;
-    std::unique_ptr<tflite::Interpreter> interpreter_;
-
-
+  // std::vector<Delegate> delegates_;
+  std::unique_ptr<tflite::FlatBufferModel> model_;
+  std::unique_ptr<tflite::Interpreter> interpreter_;
 };
 
-#endif // IMAGE_CLASSIFIER_CC_IMAGE_CLASSIFIER_H_
-
+#endif  // IMAGE_CLASSIFIER_CC_IMAGE_CLASSIFIER_H_

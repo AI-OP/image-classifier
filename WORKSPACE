@@ -99,3 +99,20 @@ http_archive(
 
 load("@org_tensorflow//tensorflow:workspace.bzl", "tf_workspace")
 tf_workspace(tf_repo_name = "org_tensorflow")
+
+# Configure libedgetpu and downstream libraries (TF and Crosstool).
+http_archive(
+  name = "libedgetpu",
+  sha256 = "14d5527a943a25bc648c28a9961f954f70ba4d79c0a9ca5ae226e1831d72fe80",
+  strip_prefix = "libedgetpu-3164995622300286ef2bb14d7fdc2792dae045b7",
+  urls = [ 
+    "https://github.com/google-coral/libedgetpu/archive/3164995622300286ef2bb14d7fdc2792dae045b7.tar.gz"
+  ],  
+)
+
+load("@libedgetpu//:workspace.bzl", "libedgetpu_dependencies")
+libedgetpu_dependencies()
+
+load("@coral_crosstool//:configure.bzl", "cc_crosstool")
+cc_crosstool(name = "crosstool")
+

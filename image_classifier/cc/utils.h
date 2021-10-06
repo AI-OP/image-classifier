@@ -16,30 +16,30 @@
 #define IMAGE_CLASSIFIER_CC_UTILS_H_
 
 #include <cstdio>
-#include <vector>
-#include <string>
 #include <queue>
+#include <string>
+#include <vector>
 
-#include "opencv2/opencv.hpp"
 #include "absl/memory/memory.h"
+#include "opencv2/opencv.hpp"
 
-#define CHECK(condition, error_info) \
-    if(!(condition)) { \
-        printf("Error: %s\n", error_info);\
-        exit(-1); \
-    }\
+#define CHECK(condition, error_info)   \
+  if (!(condition)) {                  \
+    printf("Error: %s\n", error_info); \
+    exit(-1);                          \
+  }
 
 // Todo:
 // Find more easy way to print our content
-#define LOG_INFO(content) \
-    std::cout<<content<<std::endl;
+#define LOG_INFO(content) std::cout << content << std::endl;
 
-enum class Device{
-    kCPU = 0,
-    kNNAPI = 1,
-    kGPU = 2,
+enum class Device {
+  kCPU = 0,
+  kNNAPI = 1,
+  kGPU = 2,
+  kEdgeTPU = 3,
 };
 
 typedef std::vector<uchar> Bytes;
 
-#endif //IMAGE_CLASSIFIER_CC_UTILS_H_ 
+#endif  // IMAGE_CLASSIFIER_CC_UTILS_H_

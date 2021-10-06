@@ -15,11 +15,10 @@
 #ifndef IMAGE_CLASSIFIER_CC_CLASSIFIER_FLOAT_MOBILE_NET_H_
 #define IMAGE_CLASSIFIER_CC_CLASSIFIER_FLOAT_MOBILE_NET_H_
 #include "image_classifier.h"
-class ClassifierFloatMobileNet: public ImageClassifier {
-public:
-    ClassifierFloatMobileNet();
-    ~ClassifierFloatMobileNet() = default;
+class ClassifierFloatMobileNet : public ImageClassifier {
+ public:
+  ClassifierFloatMobileNet();
+  ~ClassifierFloatMobileNet() = default;
 };
 
-#endif //IMAGE_CLASSIFIER_CC_CLASSIFIER_FLOAT_MOBILE_NET_H_
-
+#endif  // IMAGE_CLASSIFIER_CC_CLASSIFIER_FLOAT_MOBILE_NET_H_

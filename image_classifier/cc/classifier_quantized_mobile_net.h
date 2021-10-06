@@ -15,11 +15,10 @@
 #ifndef IMAGE_CLASSIFIER_CC_CLASSIFIER_QUANTIZED_MOBILE_NET_H_
 #define IMAGE_CLASSIFIER_CC_CLASSIFIER_QUANTIZED_MOBILE_NET_H_
 #include "image_classifier.h"
-class ClassifierQuantizedMobileNet: public ImageClassifier {
-public:
-    ClassifierQuantizedMobileNet();
-    ~ClassifierQuantizedMobileNet() = default;
+class ClassifierQuantizedMobileNet : public ImageClassifier {
+ public:
+  ClassifierQuantizedMobileNet();
+  ~ClassifierQuantizedMobileNet() = default;
 };
 
-#endif //IMAGE_CLASSIFIER_CC_CLASSIFIER_QUANTIZED_MOBILE_NET_H_
-
+#endif  // IMAGE_CLASSIFIER_CC_CLASSIFIER_QUANTIZED_MOBILE_NET_H_

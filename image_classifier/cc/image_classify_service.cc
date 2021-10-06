@@ -13,35 +13,32 @@
 // limitations under the License.
 
 #include "image_classify_service.h"
+
 #include "image_classifiers.h"
 
-bool ImageClassifyService::Init(std::string model_dir,
-        Model method, Device device, int num_threads) {
+bool ImageClassifyService::Init(std::string model_dir, Model method,
+                                Device device, int num_threads) {
+  classifier_ = ImageClassifiers::CreateImageClassifier(method);
 
-    classifier_ =  ImageClassifiers::CreateImageClassifier(method);
+  classifier_->Init(model_dir);
+  classifier_->SetThreads(num_threads);
+  classifier_->SetDevice(device);
 
-    classifier_ -> Init(model_dir);
-    classifier_ -> SetThreads(num_threads);
-    classifier_ -> SetDevice(device);
-
-    return true;
+  return true;
 }
 
-void ImageClassifyService::Close() {
-    ;
-}
+void ImageClassifyService::Close() { ; }
 
 int ImageClassifyService::GetModelInputSizeX() {
-    return classifier_->GetModelInputSizeX();
+  return classifier_->GetModelInputSizeX();
 }
 
 int ImageClassifyService::GetModelInputSizeY() {
-    return classifier_->GetModelInputSizeY();
+  return classifier_->GetModelInputSizeY();
 }
 
-std::vector<std::pair<std::string, float>> 
-ImageClassifyService::RecognizeImage(Bytes rgb_image_data) {
-    cv::Mat image = cv::imdecode(rgb_image_data, cv::IMREAD_COLOR);
-    return classifier_->Classify(image);
-}  
-
+std::vector<std::pair<std::string, float>> ImageClassifyService::RecognizeImage(
+    Bytes rgb_image_data) {
+  cv::Mat image = cv::imdecode(rgb_image_data, cv::IMREAD_COLOR);
+  return classifier_->Classify(image);
+}
