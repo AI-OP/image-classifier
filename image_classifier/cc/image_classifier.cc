@@ -127,7 +127,7 @@ bool ImageClassifier::Init(std::string model_dir) {
     std::shared_ptr<edgetpu::EdgeTpuContext> edgetpu_context =
         edgetpu::EdgeTpuManager::GetSingleton()->OpenDevice();
     interpreter_ = nullptr;
-    interpreter_ = BuildEdgeTpuInterpreter(*model, edgetpu_context.get());
+    interpreter_ = BuildEdgeTpuInterpreter(*model_, edgetpu_context.get());
     CHECK(this->interpreter_ != nullptr, "Edge TPU Interpreter is null.");
   }
 #endif // WITH_EDGE_TPU
