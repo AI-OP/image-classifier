@@ -2,7 +2,7 @@
 
 ClassifierQuantizedEfficientNet::ClassifierQuantizedEfficientNet() {
   SetModelName("efficientnet-lite0-int8.tflite");
-  SetLabelName("labels.txt");
+  SetLabelName("labels_without_background.txt");
   SetImageParameters(0.f, 1.f);
   SetOutputParameters(0.f, 255.f);
 }

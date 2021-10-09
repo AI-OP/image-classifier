@@ -16,7 +16,7 @@
 
 #ifndef IMAGE_CLASSIFIER_CC_CLASSIFIER_QUANTIZED_MOBILE_NET_EDGE_TPU_H_
 #define IMAGE_CLASSIFIER_CC_CLASSIFIER_QUANTIZED_MOBILE_NET_EDGE_TPU_H_
-#include "classifier_quantized_mobile_net_edge_tpu.h"
+#include "classifier_quantized_mobile_net.h"
 class ClassifierQuantizedMobileNetEdgeTPU
     : public ClassifierQuantizedMobileNet {
  public:

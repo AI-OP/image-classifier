@@ -33,11 +33,13 @@ int main(int argc, char** argv) {
   };
 
 #ifdef WITH_EDGE_TPU
+  printf("model_names in edge tpu with size: %d.\n", (int)model_names.size());
   const std::vector<Model> kEdgeTPUModels = {
       Model::kQuantizedMobileNetEdgeTPU,
       Model::kQuantizedEfficientNetEdgeTPU,
   };
   model_names = kEdgeTPUModels;
+  printf("model_names ok. with size: %d.\n", (int)model_names.size());
 #endif  // WITH_EDGE_TPU
 
   cv::CommandLineParser parser(argc, argv, command);
@@ -59,8 +61,10 @@ int main(int argc, char** argv) {
   for (auto& model : model_names) {
     std::unique_ptr<ImageClassifier> image_classifier =
         ImageClassifiers::CreateImageClassifier(model);
-
+    
+    printf("model: %d\n", model);
     image_classifier->Init(kModelDir);
+    printf("image_classifier init ok.\n");
 
     cv::TickMeter tick_meter;
     std::vector<std::pair<std::string, float>> results;

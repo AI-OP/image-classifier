@@ -23,7 +23,7 @@ class ClassifierQuantizedEfficientNetEdgeTPU
     : public ClassifierQuantizedEfficientNet {
  public:
   ClassifierQuantizedEfficientNetEdgeTPU();
-  ClassifierQuantizedEfficientNetEdgeTPU() = default;
+  ~ClassifierQuantizedEfficientNetEdgeTPU() = default;
 };
 
 #endif  // CLASSIFIER_QUANTIZED_EFFICIENT_NET_EDGE_TPU_H_

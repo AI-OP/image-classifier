@@ -16,7 +16,7 @@
 
 ClassifierFloatEfficientNet::ClassifierFloatEfficientNet() {
   SetModelName("efficientnet-lite0-fp32.tflite");
-  SetLabelName("labels.txt");
+  SetLabelName("labels_without_background.txt");
   SetImageParameters(127.f, 127.f);
   SetOutputParameters(0.f, 1.f);
 }
