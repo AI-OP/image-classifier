@@ -20,6 +20,11 @@
 #include "tensorflow/lite/optional_debug_tools.h"
 #include "utils.h"
 
+#ifdef WITH_EDGE_TPU
+#include "tflite/public/edgetpu.h"
+#endif // WITH_EDGE_TPU
+
+
 class ImageClassifier {
  public:
   virtual bool Init(std::string model_dir);
@@ -81,6 +86,11 @@ class ImageClassifier {
   // std::vector<Delegate> delegates_;
   std::unique_ptr<tflite::FlatBufferModel> model_;
   std::unique_ptr<tflite::Interpreter> interpreter_;
+
+#ifdef WITH_EDGE_TPU
+ protected:
+  std::shared_ptr<edgetpu::EdgeTpuContext> edgetpu_context_;
+#endif // WITH_EDGE_TPU
 };
 
 #endif  // IMAGE_CLASSIFIER_CC_IMAGE_CLASSIFIER_H_

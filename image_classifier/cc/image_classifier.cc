@@ -21,10 +21,6 @@
 
 #include "image_classifier.h"
 
-#ifdef WITH_EDGE_TPU
-#include "tflite/public/edgetpu.h"
-#endif // WITH_EDGE_TPU
-
 ImageClassifier::ImageClassifier() : device_(Device::kCPU), num_threads_(0) {
   ;
 }
@@ -107,33 +103,35 @@ bool ImageClassifier::Init(std::string model_dir) {
   // Load labels file
   std::string label_path = model_dir + '/' + GetLabelName();
   labels_.clear();
+  std::cout<< "label_path: "<< label_path <<std::endl;
   CHECK(LoadLabelsFile(label_path), "Error load labels file.");
+  std::cout<< "Load labels file completed!" <<std::endl;
 
   // Set model path
   std::string model_path = model_dir + '/' + GetModelName();
+  std::cout << "model_path: " << model_path << std::endl;
 
   // Load model
   model_ = tflite::FlatBufferModel::BuildFromFile(model_path.c_str());
   CHECK(model_ != nullptr, "Model cannot be built.");
+  std::cout << "load model completed!" << std::endl;
 
   // Build the interpreter
   tflite::ops::builtin::BuiltinOpResolver resolver;
   tflite::InterpreterBuilder builder(*model_, resolver);
   builder(&interpreter_);
   CHECK(this->interpreter_ != nullptr, "Interpreter is null.");
-  std::cout<<"default interpreter_ before is" << interpreter_.get() <<std::endl;
 
+  std::cout<< "Default Interpreter completed!"<<std::endl;
 
 #ifdef WITH_EDGE_TPU
   if (GetDevice() == Device::kEdgeTPU) {
-    std::shared_ptr<edgetpu::EdgeTpuContext> edgetpu_context =
-        edgetpu::EdgeTpuManager::GetSingleton()->OpenDevice();
+    edgetpu_context_ = edgetpu::EdgeTpuManager::GetSingleton()->OpenDevice();
     interpreter_ = nullptr;
-    std::cout<< "interpreter_ before is " << interpreter_.get() << std::endl;
-    interpreter_ = BuildEdgeTpuInterpreter(*model_, edgetpu_context.get());
-    std::cout<< "edgetpu interpreter_ is " << interpreter_.get() <<std::endl;
+    std::cout << "Before build edge interpreter." << std::endl;
+    interpreter_ = BuildEdgeTpuInterpreter(*model_, edgetpu_context_.get());
+    std::cout << "After edgetpu interpreter build." << std::endl;
     CHECK(this->interpreter_ != nullptr, "Edge TPU Interpreter is null.");
-    std::cout<<"EdgeTPU Interpreter is OK."<<std::endl;
   }
 #endif // WITH_EDGE_TPU
 
@@ -222,16 +220,10 @@ std::vector<std::pair<std::string, float>> ImageClassifier::Classify(
   size_t buffer_size = bytes_size * kNetworkInputWidth * kNetworkInputHeight *
                        kNetworkInputChannels;
 
-  std::cout<<"before memcpy."<<std::endl;
   memcpy(input_tensor_buffer, input_image.data, buffer_size);
 
-  std::cout<< "memcpy ok."<<std::endl;
-
-  std::cout<< "Invoke interpreter is " << interpreter_.get() << std::endl; 
   // Runing inference.
   CHECK(kTfLiteOk == interpreter_->Invoke(), "Inference invoke error.");
-
-  std::cout<<"Invoke Done."<<std::endl;
 
   // Output shape: {1, NUM_CLASSES}
   const TfLiteType output_tf_data_type =

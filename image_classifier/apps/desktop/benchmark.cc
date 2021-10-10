@@ -59,10 +59,13 @@ int main(int argc, char** argv) {
   const int kTestCount = 10;
 
   for (auto& model : model_names) {
+    printf("model: %d\n", model);
     std::unique_ptr<ImageClassifier> image_classifier =
         ImageClassifiers::CreateImageClassifier(model);
-    
-    printf("model: %d\n", model);
+    CHECK(image_classifier != nullptr, "Error: image_classifier is nullptr.");
+   
+    std::cout<<"image_classifier creating completed!"<<std::endl;
+
     image_classifier->Init(kModelDir);
     printf("image_classifier init ok.\n");
 
@@ -84,6 +87,7 @@ int main(int argc, char** argv) {
       printf("Top-%d is %s with %f \n", i + 1, results[i].first.c_str(),
              results[i].second);
     }
+    std::cout<< "-----------------------" <<std::endl;
   }
 
   return 0;
