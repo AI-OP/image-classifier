@@ -23,3 +23,12 @@ cc_binary(
     linkstatic=True,
 )
 
+cc_binary(
+    name = "image_classifier_benchmark_cpu_only",
+    deps = [
+         "//image_classifier/apps/desktop:image_classifier_benchmark_cc"
+    ],
+    visibility = ["//visibility:public"],
+    linkstatic = True,
+)
+
