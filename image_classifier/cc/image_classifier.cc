@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include "image_classifier.h"
+
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
@@ -19,10 +21,17 @@
 #include <fstream>
 #include <string>
 
-#include "image_classifier.h"
-
 ImageClassifier::ImageClassifier() : device_(Device::kCPU), num_threads_(0) {
   ;
+}
+
+ImageClassifier::~ImageClassifier() {
+#ifdef WITH_EDGE_TPU
+  // TODO: Figure out why we need to release interpreter first,
+  // and edgetpu_context_ secondly?
+  interpreter_ = nullptr;
+  edgetpu_context_ = nullptr;
+#endif  // WITH_EDGE_TPU
 }
 
 bool ImageClassifier::SetThreads(const int threads) {
@@ -76,7 +85,6 @@ bool ImageClassifier::LoadLabelsFile(std::string label_path) {
   return !labels_.empty();
 }
 
-
 #ifdef WITH_EDGE_TPU
 // TODO: It should be deprecated by using libcoral.
 std::unique_ptr<tflite::Interpreter> BuildEdgeTpuInterpreter(
@@ -96,25 +104,20 @@ std::unique_ptr<tflite::Interpreter> BuildEdgeTpuInterpreter(
   }
   return interpreter;
 }
-#endif // WITH_EDGE_TPU
-
+#endif  // WITH_EDGE_TPU
 
 bool ImageClassifier::Init(std::string model_dir) {
   // Load labels file
   std::string label_path = model_dir + '/' + GetLabelName();
   labels_.clear();
-  std::cout<< "label_path: "<< label_path <<std::endl;
   CHECK(LoadLabelsFile(label_path), "Error load labels file.");
-  std::cout<< "Load labels file completed!" <<std::endl;
 
   // Set model path
   std::string model_path = model_dir + '/' + GetModelName();
-  std::cout << "model_path: " << model_path << std::endl;
 
   // Load model
   model_ = tflite::FlatBufferModel::BuildFromFile(model_path.c_str());
   CHECK(model_ != nullptr, "Model cannot be built.");
-  std::cout << "load model completed!" << std::endl;
 
   // Build the interpreter
   tflite::ops::builtin::BuiltinOpResolver resolver;
@@ -122,18 +125,14 @@ bool ImageClassifier::Init(std::string model_dir) {
   builder(&interpreter_);
   CHECK(this->interpreter_ != nullptr, "Interpreter is null.");
 
-  std::cout<< "Default Interpreter completed!"<<std::endl;
-
 #ifdef WITH_EDGE_TPU
   if (GetDevice() == Device::kEdgeTPU) {
     edgetpu_context_ = edgetpu::EdgeTpuManager::GetSingleton()->OpenDevice();
     interpreter_ = nullptr;
-    std::cout << "Before build edge interpreter." << std::endl;
     interpreter_ = BuildEdgeTpuInterpreter(*model_, edgetpu_context_.get());
-    std::cout << "After edgetpu interpreter build." << std::endl;
     CHECK(this->interpreter_ != nullptr, "Edge TPU Interpreter is null.");
   }
-#endif // WITH_EDGE_TPU
+#endif  // WITH_EDGE_TPU
 
   input_tensor_index_ = interpreter_->inputs()[0];
   output_tensor_index_ = interpreter_->outputs()[0];

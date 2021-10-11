@@ -22,8 +22,7 @@
 
 #ifdef WITH_EDGE_TPU
 #include "tflite/public/edgetpu.h"
-#endif // WITH_EDGE_TPU
-
+#endif  // WITH_EDGE_TPU
 
 class ImageClassifier {
  public:
@@ -60,7 +59,7 @@ class ImageClassifier {
 
  public:
   ImageClassifier();
-  virtual ~ImageClassifier() = default;
+  virtual ~ImageClassifier();
 
  protected:
   int input_tensor_index_;
@@ -90,7 +89,7 @@ class ImageClassifier {
 #ifdef WITH_EDGE_TPU
  protected:
   std::shared_ptr<edgetpu::EdgeTpuContext> edgetpu_context_;
-#endif // WITH_EDGE_TPU
+#endif  // WITH_EDGE_TPU
 };
 
 #endif  // IMAGE_CLASSIFIER_CC_IMAGE_CLASSIFIER_H_
